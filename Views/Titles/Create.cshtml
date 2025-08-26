@@ -1,0 +1,26 @@
+﻿@model PEA.Models.Title
+@{
+    ViewData["Title"] = "Asignar titulo";
+}
+<h2>Nuevo departamento</h2>
+<form method="post" class="row g-3">
+    <div class="col-md-3">
+        <label class="form-label">Código</label>
+        <input asp-for="TitleName" class="form-control" />
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Desde.</label>
+        <input asp-for="FromDate" type="date" class="form-control" />
+    </div>
+
+
+    <div class="col-md-3">
+        <label class="form-label">Hasta.</label>
+        <input asp-for="ToDate" type="date" class="form-control" />
+    </div>
+    <input type="hidden" asp-for="EmpNo" />
+
+    <div class="col-12"><button class="btn btn-primary">Guardar</button> <a class="btn btn-secondary" href="/Titles">Cancelar</a></div>
+</form>
+<partial name="_ValidationScriptsPartial" />
