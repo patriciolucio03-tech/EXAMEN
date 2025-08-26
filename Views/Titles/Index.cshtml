@@ -1,0 +1,25 @@
+﻿@model IEnumerable<PEA.Models.Title>
+
+<h2>Titulo de empleado @Model.FirstOrDefault()?.EmpNo</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Desde</th>
+            <th>Hasta</th>
+            <th>Titulo</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.FromDate.ToShortDateString()</td>
+                <td>@item.ToDate?.ToShortDateString()</td>
+                <td>@item.TitleName</td>
+                <td>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 
 namespace PEA.Models;
@@ -10,7 +12,9 @@ public class Title
     public int EmpNo { get; set; }
 
 
-    [Required, StringLength(50)]
+
+    [Required, StringLength(100)]
+    [Column("Title")]
     public string TitleName { get; set; } = string.Empty;
 
 
