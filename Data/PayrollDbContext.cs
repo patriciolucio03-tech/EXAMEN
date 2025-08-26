@@ -101,7 +101,7 @@ public class PayrollDbContext : DbContext
                 Usuario = usuario,
                 FechaActualizacion = DateTime.UtcNow,
                 DetalleCambio = e.State == EntityState.Added ? "Alta de salario" : "Cambio de salario",
-                Salario = e.Entity.Salario,
+                Salario = e.Entity.Amount,
                 EmpNo = e.Entity.EmpNo
             });
         }

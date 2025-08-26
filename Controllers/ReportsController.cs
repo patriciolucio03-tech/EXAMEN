@@ -32,7 +32,7 @@ public class ReportsController : Controller
                           where de.DeptNo == deptNo
                           && de.FromDate <= date && (de.ToDate == null || de.ToDate >= date)
                           && s.FromDate <= date && (s.ToDate == null || s.ToDate >= date)
-                          select new { e.EmpNo, e.FirstName, e.LastName, s.Salario })
+                          select new { e.EmpNo, e.FirstName, e.LastName, s.Amount })
         .OrderBy(x => x.LastName).ToListAsync();
         ViewBag.DeptNo = deptNo; ViewBag.Fecha = date.ToShortDateString();
         return View(data);
@@ -50,7 +50,7 @@ public class ReportsController : Controller
                           where de.DeptNo == deptNo
                           && de.FromDate <= date && (de.ToDate == null || de.ToDate >= date)
                           && s.FromDate <= date && (s.ToDate == null || s.ToDate >= date)
-                          select new { e.EmpNo, e.FirstName, e.LastName, s.Salario })
+                          select new { e.EmpNo, e.FirstName, e.LastName, s.Amount })
         .OrderBy(x => x.LastName).ToListAsync();
 
 
@@ -58,7 +58,7 @@ public class ReportsController : Controller
         var ws = wb.Worksheets.Add("Nomina");
         ws.Cell(1, 1).Value = "EmpNo"; ws.Cell(1, 2).Value = "Nombre"; ws.Cell(1, 3).Value = "Apellido"; ws.Cell(1, 4).Value = "Salario";
         int r = 2;
-        foreach (var x in data) { ws.Cell(r, 1).Value = x.EmpNo; ws.Cell(r, 2).Value = x.FirstName; ws.Cell(r, 3).Value = x.LastName; ws.Cell(r, 4).Value = x.Salario; r++; }
+        foreach (var x in data) { ws.Cell(r, 1).Value = x.EmpNo; ws.Cell(r, 2).Value = x.FirstName; ws.Cell(r, 3).Value = x.LastName; ws.Cell(r, 4).Value = x.Amount; r++; }
         using var ms = new MemoryStream(); wb.SaveAs(ms);
         return File(ms.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"Nomina_{deptNo}.xlsx");
     }
@@ -73,7 +73,7 @@ public class ReportsController : Controller
                           where de.DeptNo == deptNo
                           && de.FromDate <= date && (de.ToDate == null || de.ToDate >= date)
                           && s.FromDate <= date && (s.ToDate == null || s.ToDate >= date)
-                          select new { e.EmpNo, e.FirstName, e.LastName, s.Salario })
+                          select new { e.EmpNo, e.FirstName, e.LastName, s.Amount })
         .OrderBy(x => x.LastName).ToListAsync();
 
 
@@ -97,7 +97,7 @@ public class ReportsController : Controller
                         t.Cell().Padding(3).Text(x.EmpNo.ToString());
                         t.Cell().Padding(3).Text(x.FirstName);
                         t.Cell().Padding(3).Text(x.LastName);
-                        t.Cell().Padding(3).Text(x.Salario.ToString("N2"));
+                        t.Cell().Padding(3).Text(x.Amount.ToString("N2"));
                     }
                 });
                 page.Footer().AlignRight().Text(txt => {
