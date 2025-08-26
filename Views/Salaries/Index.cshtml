@@ -1,25 +1,26 @@
-﻿@model PEA.Models.Salary
-@{
-    ViewData["Title"] = "Nuevo salario";
-}
-<h2>Nuevo salario</h2>
-<form method="post" class="row g-3">
-    <input asp-for="EmpNo" type="hidden" />
-    <div class="col-md-4">
-        <label class="form-label">Desde</label>
-        <input asp-for="FromDate" type="date" class="form-control" />
-    </div>
-    <div class="col-md-4">
-        <label class="form-label">Hasta (opcional)</label>
-        <input asp-for="ToDate" type="date" class="form-control" />
-    </div>
-    <div class="col-md-4">
-        <label class="form-label">Monto</label>
-        <input asp-for="Salary" class="form-control" />
-    </div>
-    <div class="col-12">
-        <button class="btn btn-primary">Guardar</button>
-        <a class="btn btn-secondary" href="/Salaries?empNo=@Model.EmpNo">Cancelar</a>
-    </div>
-</form>
-<div class="text-danger">@Html.ValidationSummary()</div>
+﻿@model IEnumerable<PEA.Models.Salary>
+
+    <h2>Salarios de empleado @Model.FirstOrDefault()?.EmpNo</h2>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Desde</th>
+                <th>Hasta</th>
+                <th>Monto</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.FromDate.ToShortDateString()</td>
+                <td>@item.ToDate?.ToShortDateString()</td>
+                <td>@item.Amount</td>
+                <td>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
