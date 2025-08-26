@@ -1,0 +1,43 @@
+﻿@model IEnumerable<dynamic>
+@{
+    ViewData["Title"] = "Nómina por departamento";
+    var deptNo = (string)ViewBag.DeptNo;
+    var fecha = (DateTime)ViewBag.Fecha;
+}
+<h2>Nómina depto @deptNo (@fecha:yyyy-MM-dd)</h2>
+
+<div class="mb-2">
+    <a class="btn btn-outline-secondary"
+       asp-controller="Reports" asp-action="PayrollByDeptExcel"
+       asp-route-deptNo="@deptNo" asp-route-fechaCorte="@fecha.ToString("yyyy-MM-dd")">
+        Descargar Excel
+    </a>
+
+    <a class="btn btn-outline-secondary"
+       asp-controller="Reports" asp-action="PayrollByDeptPdf"
+       asp-route-deptNo="@deptNo" asp-route-fechaCorte="@fecha.ToString("yyyy-MM-dd")">
+        Descargar PDF
+    </a>
+</div>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-info">Sin datos para la fecha indicada.</div>
+}
+else
+{
+    <table class="table table-striped">
+        <thead><tr><th>EmpNo</th><th>Nombre</th><th>Apellido</th><th>Salario</th></tr></thead>
+        <tbody>
+            @foreach (var x in Model)
+            {
+                <tr>
+                    <td>@x.EmpNo</td>
+                    <td>@x.FirstName</td>
+                    <td>@x.LastName</td>
+                    <td>@(((decimal)x.Amount).ToString("N2"))</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
