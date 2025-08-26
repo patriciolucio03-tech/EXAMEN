@@ -11,9 +11,10 @@ public class Salary
     public int EmpNo { get; set; }
 
 
-    [Column(TypeName = "decimal(18,2)")]
+    [Column("Salario", TypeName = "decimal(10,2)")]
     [Range(0, double.MaxValue)]
-    public decimal Salary { get; set; }
+    public decimal Amount { get; set; }
+
 
 
     [Required]
