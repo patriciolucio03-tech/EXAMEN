@@ -1,0 +1,22 @@
+﻿@model IEnumerable<PEA.Models.Department>
+@{
+    ViewData["Title"] = "Departamentos";
+}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Departamentos</h2>
+    <a class="btn btn-success" href="/Departments/Create">Nuevo</a>
+</div>
+<table class="table table-striped">
+    <thead><tr><th>DeptNo</th><th>Nombre</th><th>Activo</th><th></th></tr></thead>
+    <tbody>
+        @foreach (var d in Model)
+        {
+            <tr>
+                <td>@d.DeptNo</td>
+                <td>@d.DeptName</td>
+                <td>@(d.Activo ? "Sí" : "No")</td>
+                <td><a class="btn btn-sm btn-primary" href="/Departments/Edit/@d.DeptNo">Editar</a> <a class="btn btn-sm btn-secondary" href="/DeptManagers?deptNo=@d.DeptNo">Gerentes</a></td>
+            </tr>
+        }
+    </tbody>
+</table>

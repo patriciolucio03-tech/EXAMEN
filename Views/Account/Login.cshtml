@@ -1,0 +1,20 @@
+﻿@model string
+@{
+    ViewData["Title"] = "Login";
+}
+<h2>Ingreso</h2>
+<form method="post" class="col-12 col-md-6">
+    <div class="mb-3">
+        <label class="form-label">Usuario</label>
+        <input name="username" class="form-control" required />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Contraseña</label>
+        <input name="password" type="password" class="form-control" required />
+    </div>
+    <button class="btn btn-primary">Entrar</button>
+</form>
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="text-danger mt-3">@ViewData.ModelState[string.Empty]?.Errors.FirstOrDefault()?.ErrorMessage</div>
+}
