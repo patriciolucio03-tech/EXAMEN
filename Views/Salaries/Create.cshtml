@@ -3,8 +3,12 @@
 <h2>Salarios de empleado @Model.FirstOrDefault()?.EmpNo</h2>
 
 
-<a href="@Url.Action("Create", "Salary")" class="btn btn-primary">Agregar Salario</a>
-
+<a class="btn btn-primary mb-3"
+   asp-controller="Salaries"
+   asp-action="Create"
+   asp-route-empNo="@Model.FirstOrDefault()?.EmpNo">
+    Agregar Salario
+</a>
 <table class="table">
     <thead>
         <tr>
