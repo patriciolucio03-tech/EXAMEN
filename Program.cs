@@ -65,6 +65,4 @@ using (var scope = app.Services.CreateScope())
     var db = scope.ServiceProvider.GetRequiredService<PayrollDbContext>();
     await DbInitializer.SeedAsync(db);
 }
-
-
 app.Run();

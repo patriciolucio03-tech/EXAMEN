@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PEA.Models;
 
-
 namespace PEA.Data;
 
 
@@ -74,42 +73,35 @@ public class PayrollDbContext : DbContext
         mb.Entity<Log_AuditoriaSalarios>().Property(l => l.Id).HasColumnName("LogId"); // <—
         mb.Entity<Log_AuditoriaSalarios>().Property(l => l.Salario).HasColumnName("Salario");
     }
+   
+    // ===== Pasar el usuario al TRIGGER (SQL Server 2016+ con SESSION_CONTEXT) =====
+    private void SetDbSessionUser(string usuario)
+    {
+        // Si usas SQL Azure/SQL 2016+, usa SESSION_CONTEXT
+        Database.ExecuteSqlInterpolated(
+            $"EXEC sys.sp_set_session_context @key=N'AppUser', @value={usuario};");
+    }
+
     public override int SaveChanges()
     {
-        AuditarSalarios();
+        var usuario = _http.HttpContext?.User?.Identity?.IsAuthenticated == true
+            ? _http.HttpContext!.User.Identity!.Name!
+            : "sistema";
+        SetDbSessionUser(usuario);
+
+        // IMPORTANTE: ya no hacemos auditoría aquí para evitar duplicados (la hace el TRIGGER)
         return base.SaveChanges();
     }
 
-
-    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-    {
-        AuditarSalarios();
-        return await base.SaveChangesAsync(cancellationToken);
-    }
-
-
-    private void AuditarSalarios()
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         var usuario = _http.HttpContext?.User?.Identity?.IsAuthenticated == true
-        ? _http.HttpContext!.User.Identity!.Name!
-        : "sistema";
+            ? _http.HttpContext!.User.Identity!.Name!
+            : "sistema";
+        SetDbSessionUser(usuario);
 
-
-        var entradas = ChangeTracker.Entries<Salary>()
-        .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified)
-        .ToList();
-
-
-        foreach (var e in entradas)
-        {
-            Log_AuditoriaSalarios.Add(new Log_AuditoriaSalarios
-            {
-                Usuario = usuario,
-                FechaActualizacion = DateTime.UtcNow,
-                DetalleCambio = e.State == EntityState.Added ? "Alta de salario" : "Cambio de salario",
-                Salario = e.Entity.Amount,
-                EmpNo = e.Entity.EmpNo
-            });
-        }
+        // IMPORTANTE: ya no hacemos auditoría aquí para evitar duplicados (la hace el TRIGGER)
+        return base.SaveChangesAsync(cancellationToken);
     }
+
 }
