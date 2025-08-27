@@ -1,0 +1,94 @@
+﻿@model PEA.Models.ViewModels.AuditLogIndexVM
+@{
+    ViewData["Title"] = "Auditoría de Salarios";
+    int totalPages = (int)Math.Ceiling((double)Model.Total / Model.PageSize);
+}
+
+<h2>Auditoría de Salarios</h2>
+
+<form method="get" class="row g-3 mb-3">
+    <div class="col-md-3">
+        <label class="form-label">Desde</label>
+        <input type="date" name="desde" value="@(Model.Desde?.ToString("yyyy-MM-dd"))" class="form-control" />
+    </div>
+    <div class="col-md-3">
+        <label class="form-label">Hasta</label>
+        <input type="date" name="hasta" value="@(Model.Hasta?.ToString("yyyy-MM-dd"))" class="form-control" />
+    </div>
+    <div class="col-md-3">
+        <label class="form-label">Usuario</label>
+        <input type="text" name="usuario" value="@Model.Usuario" class="form-control" placeholder="admin, rrhh..." />
+    </div>
+    <div class="col-md-3">
+        <label class="form-label">EmpNo</label>
+        <input type="number" name="empNo" value="@(Model.EmpNo?.ToString())" class="form-control" />
+    </div>
+    <div class="col-12 d-flex gap-2">
+        <button class="btn btn-primary">Filtrar</button>
+        <a class="btn btn-outline-secondary" asp-action="Index">Limpiar</a>
+    </div>
+</form>
+
+@if (Model.Items == null || !Model.Items.Any())
+{
+    <div class="alert alert-info">Sin resultados para los filtros seleccionados.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped align-middle">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Usuario</th>
+                    <th>EmpNo</th>
+                    <th>Salario</th>
+                    <th>Detalle</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var x in Model.Items)
+                {
+                    <tr>
+                        <td>@x.FechaActualizacion.ToString("yyyy-MM-dd HH:mm")</td>
+                        <td>@x.Usuario</td>
+                        <td>@x.EmpNo</td>
+                        <td>@x.Salario.ToString("N2")</td>
+                        <td>@x.DetalleCambio</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Paginación simple -->
+    <nav aria-label="pager">
+        <ul class="pagination">
+            <li class="page-item @(Model.Page <= 1 ? "disabled" : "")">
+                <a class="page-link"
+                   asp-action="Index"
+                   asp-route-desde="@(Model.Desde?.ToString("yyyy-MM-dd"))"
+                   asp-route-hasta="@(Model.Hasta?.ToString("yyyy-MM-dd"))"
+                   asp-route-usuario="@Model.Usuario"
+                   asp-route-empNo="@(Model.EmpNo?.ToString())"
+                   asp-route-page="@(Model.Page - 1)"
+                   asp-route-pageSize="@Model.PageSize">Anterior</a>
+            </li>
+
+            <li class="page-item disabled">
+                <span class="page-link">Página @Model.Page de @totalPages</span>
+            </li>
+
+            <li class="page-item @((Model.Page >= totalPages) ? "disabled" : "")">
+                <a class="page-link"
+                   asp-action="Index"
+                   asp-route-desde="@(Model.Desde?.ToString("yyyy-MM-dd"))"
+                   asp-route-hasta="@(Model.Hasta?.ToString("yyyy-MM-dd"))"
+                   asp-route-usuario="@Model.Usuario"
+                   asp-route-empNo="@(Model.EmpNo?.ToString())"
+                   asp-route-page="@(Model.Page + 1)"
+                   asp-route-pageSize="@Model.PageSize">Siguiente</a>
+            </li>
+        </ul>
+    </nav>
+}

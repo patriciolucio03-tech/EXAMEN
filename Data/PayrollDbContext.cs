@@ -67,6 +67,12 @@ public class PayrollDbContext : DbContext
 
         // Users
         mb.Entity<User>().HasIndex(u => u.Usuario).IsUnique();
+
+        // Log_AuditoriaSalarios  Id -> LogId
+        mb.Entity<Log_AuditoriaSalarios>().ToTable("Log_AuditoriaSalarios");
+        mb.Entity<Log_AuditoriaSalarios>().HasKey(l => l.Id);
+        mb.Entity<Log_AuditoriaSalarios>().Property(l => l.Id).HasColumnName("LogId"); // <—
+        mb.Entity<Log_AuditoriaSalarios>().Property(l => l.Salario).HasColumnName("Salario");
     }
     public override int SaveChanges()
     {
