@@ -1,12 +1,14 @@
 ﻿@model PEA.Models.Salary
 @{
-    ViewData["Title"] = "Agregar salario";
+    ViewData["Title"] = "Editar salario";
+    var originalFromDate = (DateTime)(ViewBag.OriginalFromDate ?? Model.FromDate);
 }
-<h2>Agregar salario</h2>
+<h2>Editar salario</h2>
 
-<form asp-action="Create" method="post" class="row g-3">
+<form asp-action="Edit" method="post" class="row g-3">
     @Html.AntiForgeryToken()
     <input asp-for="EmpNo" type="hidden" />
+    <input type="hidden" name="originalFromDate" value="@originalFromDate.ToString("yyyy-MM-dd")" />
 
     <div class="col-md-4">
         <label class="form-label">Desde</label>
@@ -28,7 +30,7 @@
 
     <div class="col-12">
         <label class="form-label">Motivo del aumento (si corresponde)</label>
-        <input name="motivoAumento" class="form-control" placeholder="Obligatorio si el monto sube respecto al salario vigente" />
+        <input name="motivoAumento" class="form-control" placeholder="Obligatorio si el monto aumenta" />
     </div>
 
     <div class="col-12 d-flex gap-2">

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PEA.Models;
+using System.Globalization;
 
 namespace PEA.Data;
 
@@ -57,14 +58,15 @@ public class PayrollDbContext : DbContext
         mb.Entity<Title>()
         .HasOne(x => x.Employee).WithMany(e => e.Titles).HasForeignKey(x => x.EmpNo);
 
-
-        
-        mb.Entity<Salary>().HasKey(x => new { x.EmpNo, x.FromDate });
         mb.Entity<Salary>()
-        .HasOne(x => x.Employee).WithMany(e => e.Salaries).HasForeignKey(x => x.EmpNo);
+  .ToTable("Salaries", tb => tb.HasTrigger("trg_Salaries_Audit")); 
+        mb.Entity<Salary>().HasKey(x => new { x.EmpNo, x.FromDate });
+        mb.Entity<Salary>().Property(x => x.Amount).HasColumnName("Salario"); 
+        mb.Entity<Salary>()
+          .HasOne(x => x.Employee).WithMany(e => e.Salaries).HasForeignKey(x => x.EmpNo);
+      
 
 
-        
         mb.Entity<User>().HasIndex(u => u.Usuario).IsUnique();
 
         

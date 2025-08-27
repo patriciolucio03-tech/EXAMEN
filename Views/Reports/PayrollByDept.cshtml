@@ -1,43 +1,56 @@
-﻿@model IEnumerable<dynamic>
+﻿@model PEA.Models.ViewModels.PayrollByDeptVM
 @{
     ViewData["Title"] = "Nómina por departamento";
-    var deptNo = (string)ViewBag.DeptNo;
-    var fecha = (DateTime)ViewBag.Fecha;
 }
-<h2>Nómina depto @deptNo (@fecha:yyyy-MM-dd)</h2>
 
-<div class="mb-2">
-    <a class="btn btn-outline-secondary"
-       asp-controller="Reports" asp-action="PayrollByDeptExcel"
-       asp-route-deptNo="@deptNo" asp-route-fechaCorte="@fecha.ToString("yyyy-MM-dd")">
-        Descargar Excel
-    </a>
+<h2 class="mb-3">Nómina por departamento</h2>
 
-    <a class="btn btn-outline-secondary"
-       asp-controller="Reports" asp-action="PayrollByDeptPdf"
-       asp-route-deptNo="@deptNo" asp-route-fechaCorte="@fecha.ToString("yyyy-MM-dd")">
-        Descargar PDF
-    </a>
-</div>
+<form method="get" asp-action="PayrollByDept" class="row g-2 mb-3">
+    <div class="col-md-3">
+        <label class="form-label">Fecha</label>
+        <input asp-for="Fecha" type="date" class="form-control" />
+    </div>
+    <div class="col-md-3">
+        <label class="form-label">Dept No</label>
+        <input asp-for="DeptNo" type="number" class="form-control" />
+    </div>
+    <div class="col-md-3 align-self-end d-flex gap-2">
+        <button class="btn btn-primary">Filtrar</button>
+        <a class="btn btn-secondary" asp-action="PayrollByDept">Limpiar</a>
+    </div>
+</form>
 
-@if (Model == null || !Model.Any())
+@if (Model.Rows == null || !Model.Rows.Any())
 {
-    <div class="alert alert-info">Sin datos para la fecha indicada.</div>
+    <div class="alert alert-info">No hay datos para los filtros seleccionados.</div>
 }
 else
 {
-    <table class="table table-striped">
-        <thead><tr><th>EmpNo</th><th>Nombre</th><th>Apellido</th><th>Salario</th></tr></thead>
-        <tbody>
-            @foreach (var x in Model)
-            {
+    <div class="table-responsive">
+        <table class="table table-striped align-middle">
+            <thead>
                 <tr>
-                    <td>@x.EmpNo</td>
-                    <td>@x.FirstName</td>
-                    <td>@x.LastName</td>
-                    <td>@(((decimal)x.Amount).ToString("N2"))</td>
+                    <th>EmpNo</th>
+                    <th>Empleado</th>
+                    <th>Departamento</th>
+                    <th>Monto</th>
+                    <th>Desde</th>
+                    <th>Hasta</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var r in Model.Rows)
+                {
+                    <tr>
+                        <td>@r.EmpNo</td>
+                        <td>@r.FullName</td>
+                        <td>@r.DeptName</td>
+                        <td>@r.Amount.ToString("N2")</td>
+                        <td>@r.FromDate.ToString("yyyy-MM-dd")</td>
+                        <td>@(r.ToDate?.ToString("yyyy-MM-dd") ?? "-")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 }
