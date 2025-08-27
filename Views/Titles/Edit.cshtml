@@ -1,17 +1,21 @@
 ﻿@model PEA.Models.Title
 @{
-    ViewData["Title"] = "Agregar título";
+    ViewData["Title"] = "Editar título";
+    var originalTitleName = (string)(ViewBag.OriginalTitleName ?? Model.TitleName);
+    var originalFromDate = (DateTime)(ViewBag.OriginalFromDate ?? Model.FromDate);
 }
+<h2>Editar título</h2>
 
-<h2>Agregar título</h2>
-
-<form asp-action="Create" method="post" class="row g-3">
+<form asp-action="Edit" method="post" class="row g-3">
     @Html.AntiForgeryToken()
+
     <input asp-for="EmpNo" type="hidden" />
+    <input type="hidden" name="originalTitleName" value="@originalTitleName" />
+    <input type="hidden" name="originalFromDate" value="@originalFromDate.ToString("yyyy-MM-dd")" />
 
     <div class="col-md-6">
         <label class="form-label">Título</label>
-        <input asp-for="TitleName" class="form-control" placeholder="Ej. Analista" />
+        <input asp-for="TitleName" class="form-control" />
         <span class="text-danger" asp-validation-for="TitleName"></span>
     </div>
 
